@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Google Map Location Picker</title>
+
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+
+    #searchBox {
+      width: 300px;
+      height: 40px;
+      margin: 10px;
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    #info {
+      margin-top: 10px;
+      font-family: Arial;
+      white-space: pre-line;
+    }
+  </style>
+
+  <script>
+    let map;
+    let marker;
+
+    function initMap() {
+      // Default location (Dhaka)
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 23.8103, lng: 90.4125 },
+        zoom: 10,
+      });
+
+      // =========================
+      // CLICK TO SELECT LOCATION
+      // =========================
+      map.addListener("click", function (e) {
+        const lat = e.latLng.lat();
+        const lng = e.latLng.lng();
+
+        setMarker(e.latLng);
+        showInfo(lat, lng, "Map Click");
+
+        console.log("Selected:", lat, lng);
+      });
+
+      // =========================
+      // SEARCH BOX
+      // =========================
+      const input = document.getElementById("searchBox");
+      const searchBox = new google.maps.places.SearchBox(input);
+
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+      searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+        if (!places || places.length === 0) return;
+
+        const place = places[0];
+
+        if (!place.geometry || !place.geometry.location) return;
+
+        map.setCenter(place.geometry.location);
+        map.setZoom(15);
+
+        setMarker(place.geometry.location);
+
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+
+        showInfo(lat, lng, place.name || "Search Result");
+
+        console.log("Search Selected:", lat, lng);
+      });
+    }
+
+    // =========================
+    // SET MARKER FUNCTION
+    // =========================
+    function setMarker(location) {
+      if (marker) {
+        marker.setPosition(location);
+      } else {
+        marker = new google.maps.Marker({
+          position: location,
+          map: map,
+        });
+      }
+    }
+
+    // =========================
+    // SHOW INFO
+    // =========================
+    function showInfo(lat, lng, source) {
+      document.getElementById("info").innerText =
+        `Selected From: ${source}\nLatitude: ${lat}\nLongitude: ${lng}`;
+    }
+  </script>
+
+  <!-- IMPORTANT: Replace YOUR_API_KEY -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnJ8wXJCm0HtYnDY8oLDL2h-nllW935BQ&libraries=places&callback=initMap">
+  </script>
+</head>
+
+<body>
+
+  <h3>Google Map Location Picker</h3>
+
+  <!-- Search Box -->
+  <input id="searchBox" type="text" placeholder="Search location..." />
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Output -->
+  <div id="info">Click on map or search a place</div>
+
+</body>
+</html>

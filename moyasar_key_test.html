@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.moyasar.com/mpf/1.15.0/moyasar.js"></script>
+    <link rel="stylesheet" href="https://cdn.moyasar.com/mpf/1.15.0/moyasar.css">
+</head>
+<body>
+
+<div class="mysr-form"></div>
+
+<script>
+Moyasar.init({
+    element: '.mysr-form',
+
+    amount: 1000,
+
+    currency: 'SAR',
+
+    description: 'Test Payment',
+
+    publishable_api_key: 'pk_test_kuSiXmJ2CfSZWyghWk4MAKbwoq172NZqzEZBMfcG',
+
+    callback_url: 'https://example.com/callback',
+
+    methods: ['creditcard'],
+});
+</script>
+
+</body>
+</html>
